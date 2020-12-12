@@ -19,7 +19,7 @@ imageSourceUrl = 'https://'+ app.config['BLOB_ACCOUNT']  + '.blob.core.windows.n
 @app.route('/home')
 @login_required
 def home():
-    users = User.query.filter_by(username=current_user.username).first_or_404()
+    user = User.query.filter_by(username=current_user.username).first_or_404()
     posts = Post.query.all()
     return render_template(
         'index.html',
@@ -86,8 +86,7 @@ def authorized():
     if request.args.get('code'):
         cache = _load_cache()
         # Acquire a token from a built msal app, along with the appropriate redirect URI
-        result = _build_msal_app(cache=cache). \
-        acquire_token_by_authorization_code(
+        result = _build_msal_app(cache=cache).acquire_token_by_authorization_code(
             request.args['code'],
             scopes=Config.SCOPE,
             redirect_uri=url_for('authorized',_external=True,_scheme='https')
@@ -116,8 +115,10 @@ def logout():
     return redirect(url_for('login'))
 
 def _load_cache():
-    # TODO: Load the cache from `msal`, if it exists
-    cache = None
+    # Load the cache from `msal`, if it exists
+    cache = msal.SerializableTokenCache()
+    if session.get("token_cache"):
+        cache.deserialize(session["token_cache"])
     return cache
 
 def _save_cache(cache):

@@ -52,13 +52,13 @@ class Post(db.Model):
         self.user_id = userId
 
         if file:
-            filename = secure_filename(file.filename);
-            fileextension = filename.rsplit('.',1)[1];
-            Randomfilename = id_generator();
-            filename = Randomfilename + '.' + fileextension;
+            filename = secure_filename(file.filename)
+            fileextension = filename.rsplit('.',1)[1]
+            Randomfilename = id_generator()
+            filename = Randomfilename + '.' + fileextension
             try:
                 blob_service.create_blob_from_stream(blob_container, filename, file)
-                if(self.image_path):
+                if self.image_path:
                     blob_service.delete_blob(blob_container, self.image_path)
             except Exception:
                 flash(Exception)
