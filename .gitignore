@@ -1,0 +1,7 @@
+.github/
+.venv/
+.vscode/
+__pycache__/
+example_images/
+screenshots/
+flask_session/
