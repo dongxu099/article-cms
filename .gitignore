@@ -5,3 +5,4 @@ __pycache__/
 example_images/
 screenshots/
 flask_session/
+.DS_Store
